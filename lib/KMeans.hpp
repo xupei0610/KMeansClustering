@@ -52,7 +52,6 @@ private:
     {
         int id;
         Eigen::SparseVector<double> vec;
-        double l2norm;
         int centroid = -1;       // id of the centorid as well as the id of its cluster. See the stucture of _Centroid
         _S_Point(int id) : id(id) {}
     };

@@ -4,7 +4,13 @@ This is an implementation of applying the K-means algorithm on document clusteri
 The main program is written in C++, while a python script `preprocess.py` is used to extract document data from the `Reuters-21578` dataset.
 
 ## Details of the K-means Algorithm
-- This program now only support cosine similarity, but can be easily extended by modifying the `_assignPoints()` function in the `lib/Kmeans.cpp` file.
+- Data objects are vectorized while each value of an element in the vector is the term frequency of the corresponding token (a word or a group of words) occurring in a document. Term frequency here means the times of a token occurring in a document.
+- This program now only support cosine similarity, but can be easily extended by modifying the `_assignPoints()` function in the `lib/Kmeans.cpp` file. The cosine similarity is calculated via
+
+    cos(x, c) = <x, c>/norm(c, 2)
+
+where x is a vectorized data object, c is a centroid, `<.,.>` is the inner product of a object and a centroid, and `norm(., 2)` is the l2-norm of a centroid. For any vectorized data object, it has been normalized before participating in computation so that norm(x,2) == 1.
+- Centroid is obtained as the mean of the corresponding normalized, vectorized data objects.
 - This K-means algorithm calculates objective function via the dissimilarity and tries to minimize the objective function's value.
 - This program can conduct clustering evaluation. It does not really evaluate the quality of the clustering solution it finds, but just shows the entropy and purity value of the clustering solution.
 - This program use `mt19937` random engine to (pseudo-)randomly generate initial centroids.
@@ -36,9 +42,9 @@ to preprocess the data instead of runing `preprocess.py` by hand.
 
 For Windows users, two compiled programs named `sphkmeans32.exe` and `sphkmeans64.exe` are provided.
 
-For Mac OS users, a program named `sphkmeans.mac64` is provided, which is compile under Mac OS 10.12.
+For Mac OS users, a program named `sphkmeans.mac64` is provided, which is compiled under Mac OS 10.12.
 
-For Linux users, you can compile the program yourself. If you use Ubuntun, two programs named `sphkmeans.lx32` and `sphkmeans.lx64` are provided.
+For Linux users, you can compile the program yourself. If you use Ubuntun, two programs named `sphkmeans.lx32` and `sphkmeans.lx64` are provided. These two programs are compiled in Visual Studio 2015.
 
 The program `sphkmeans` accept five parameters but not all of them  must be provided. Run it without any paramter to see the information of the parameters.
 

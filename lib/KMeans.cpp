@@ -192,9 +192,7 @@ void KMeans::_vectorizeData()
         i = p.second->attribute.size();
         for (; --i > -1;)
             sp->vec.insert(p.second->attribute[i]) = p.second->value[i];
-
-        // Now only consine similarity is supported. So only the l2norm is needed
-        sp->l2norm = sp->vec.norm();
+	sp->vec /= sp->vec.norm();
     }
 }
 
@@ -216,7 +214,7 @@ std::deque<int> KMeans::_initializeCentroids()
         {
             random_num_generated.insert(rand_num);
             this->_centroids.push_front(new _Centroid(
-                                                      i, this->_s_pts[rand_num]->vec, this->_s_pts[rand_num]->l2norm)
+                                                      i, this->_s_pts[rand_num]->vec, 1)
                                         );
             inital_centroids.push_front(this->_s_pts[rand_num]->id);
             continue;
@@ -246,7 +244,7 @@ int KMeans::_assignPoints()
         min_dissim = 3;
         for (auto c : this->_centroids)
         {
-            dissim = 1 - p->vec.dot(c->vec)/(p->l2norm * c->l2norm);
+            dissim = 1 - p->vec.dot(c->vec)/c->l2norm;
 
             if (dissim < min_dissim)
             {
@@ -308,7 +306,7 @@ int KMeans::_updateCentroids(const std::set<int> & centroid_ids)
                     p->centroid = cid;
                     this->_centroids[cid]->pts.push_front(p);
                     this->_centroids[cid]->vec = p->vec;
-                    this->_centroids[cid]->l2norm = p->l2norm;
+                    this->_centroids[cid]->l2norm = 1;
                 }
             }
         }
@@ -331,7 +329,7 @@ int KMeans::_updateCentroids(const std::set<int> & centroid_ids)
                         p->centroid = cid;
                         this->_centroids[cid]->pts.push_front(p);
                         this->_centroids[cid]->vec = p->vec;
-                        this->_centroids[cid]->l2norm = p->l2norm;
+                        this->_centroids[cid]->l2norm = 1;
                         nonempty_clusters.push_front(ne_c->id);
                         break;
                     }
